@@ -44,7 +44,6 @@ class TwitchNotifier:
         try:
             if len(response.json()['data']) >= 1:
                 self.streamer_data = response.json()
-                print("Stream is live!!!")
 
                 try:
                     game_name_search_url = "https://api.twitch.tv/helix/games"
@@ -61,7 +60,7 @@ class TwitchNotifier:
 
                 return True
             else:
-                print("Not Online Yet!!!")
+                return False
         except ValueError as v:
             print(v)
             return False
@@ -70,8 +69,9 @@ class TwitchNotifier:
     def notify_discord(self):
         if len(self.game_name) > 0:
             self.discord_description = f"Game: {self.game_name}"
-        self.discord_message += f"\n{self.stream_url}"
-        discord_payload = {
+        self.discord_message += f" {self.stream_url}"
+
+        """discord_payload = {
             "content":  self.discord_message,
             "embeds": [
                 {
@@ -80,6 +80,12 @@ class TwitchNotifier:
                     "description": self.discord_description
                 }
             ]
+        }"""
+
+        discord_content = self.discord_message + '\n\n' \
+                          + self.streamer_data['data'][0]['title'] + '\n\n' + self.discord_description
+        discord_payload = {
+            "content": discord_content
         }
 
         status_code = 0
@@ -93,10 +99,3 @@ class TwitchNotifier:
                 print("Failed to call Discord API. Waiting 5 seconds to retry...")
                 sleep(5)
         return True
-
-
-"""if __name__ == '__main__':
-    bot = TwitchNotifier()
-    if bot.is_he_live():
-        bot.notify_discord()"""
-
