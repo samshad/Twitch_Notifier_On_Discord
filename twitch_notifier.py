@@ -88,16 +88,15 @@ class TwitchNotifier:
             status_code = discord_request.status_code
 
             if discord_request.status_code == 204:
-                print("Successfully called Discord API. Waiting 5 seconds to terminate...")
-                sleep(5)
+                print("Successfully called Discord API.")
             else:
                 print("Failed to call Discord API. Waiting 5 seconds to retry...")
                 sleep(5)
+        return True
 
 
-if __name__ == '__main__':
+"""if __name__ == '__main__':
     bot = TwitchNotifier()
     if bot.is_he_live():
-        bot.notify_discord()
-
+        bot.notify_discord()"""
 
